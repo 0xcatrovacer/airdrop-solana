@@ -10,13 +10,15 @@ const {
 
 const newPair = new Keypair();
 
+console.log(newPair);
+
 const publicKey = new PublicKey(newPair._keypair.publicKey).toString();
 
 const secretKey = newPair._keypair.secretKey;
 
 const getWalletBalance = async () => {
     try {
-        const connection = Connection(clusterApiUrl("devnet"), "confirmed");
+        const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
         const myWallet = await Keypair.fromSecretKey(secretKey);
 
@@ -51,3 +53,11 @@ const airDropSol = async () => {
         console.log(e);
     }
 };
+
+const driverFunction = async () => {
+    await getWalletBalance();
+    await airDropSol();
+    await getWalletBalance();
+};
+
+driverFunction();
