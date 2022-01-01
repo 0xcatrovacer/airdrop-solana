@@ -10,7 +10,7 @@ const {
 
 const newPair = new Keypair();
 
-const PublicKey = new PublicKey(newPair._keypair.publicKey).toString();
+const publicKey = new PublicKey(newPair._keypair.publicKey).toString();
 
 const secretKey = newPair._keypair.secretKey;
 
@@ -28,6 +28,25 @@ const getWalletBalance = async () => {
         console.log(
             `Wallet balance: ${parseInt(walletBalance) / LAMPORTS_PER_SOL}SOL`
         );
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+const airDropSol = async () => {
+    try {
+        const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+
+        const walletKeyPair = await Keypair.fromSecretKey(secretKey);
+
+        console.log(`-- Airdropping 2 SOL --`);
+
+        const fromAirDropSignature = await connection.requestAirdrop(
+            new PublicKey(walletKeyPair.publicKey),
+            2 * LAMPORTS_PER_SOL
+        );
+
+        await connection.confirmTransaction(fromAirDropSignature);
     } catch (e) {
         console.log(e);
     }
